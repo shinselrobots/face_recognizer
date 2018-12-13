@@ -158,24 +158,24 @@ class FaceRecognitionNode(object):
         """
         #rospy.loginfo("DBG recognize()")
 
-        for i, detection in enumerate(msg_in.detected_list):
+        for i, person in enumerate(msg_in.detected_list):
 
             bb_left = bb_top = bb_right =  bb_bottom = 0
             
-            if detection.face_found:
+            if person.face_found:
                 #rospy.loginfo("DBG face found")
 
-                bb_left =   int(  detection.face_left * self.scaling_factor)
-                bb_top =    int(  detection.face_top  * self.scaling_factor)
-                bb_right =  int( (detection.face_left + detection.face_width) \
+                bb_left =   int(  person.face_left * self.scaling_factor)
+                bb_top =    int(  person.face_top  * self.scaling_factor)
+                bb_right =  int( (person.face_left + person.face_width) \
                     * self.scaling_factor)
-                bb_bottom = int( (detection.face_top + detection.face_height)  \
+                bb_bottom = int( (person.face_top + person.face_height)  \
                     * self.scaling_factor)
 
                 # Crop image to face
                 temp_image = image[bb_top:bb_bottom, bb_left:bb_right ]
 
-                # Show crop detection image - BGR GREEN
+                # Show crop person image - BGR GREEN
                 cv2.rectangle(image, (bb_left, bb_top), (bb_right, bb_bottom), (0, 255, 0), 3)
 
                 # DEBUG Show frame size on image - BGR WHITE
@@ -196,13 +196,13 @@ class FaceRecognitionNode(object):
                         matches = fr.compare_faces(self.database[0], features)
 
                         rospy.loginfo("DBG found a face, looking for matching faces")
-                        detection.name = "Unknown"
+                        person.name = "Unknown"
 
                         if True in matches:
                             ind = matches.index(True)
-                            detection.name = self.database[1][ind] # modify the message!
+                            person.name = self.database[1][ind] # modify the message!
                             rospy.loginfo("********** DBG FOUND MATCHING FACE! ********")
-                            rospy.loginfo("Name = " + detection.name)
+                            rospy.loginfo("Name = " + person.name)
 
                         # Draw bounding boxes on current image
                         l = bb_left + left # map into the face rectangle
@@ -215,9 +215,9 @@ class FaceRecognitionNode(object):
                         #cv2.rectangle(image, (x, y), \
                         #(x + width, y + height), (255, 0, 0), 3)
 
-                        cv2.putText(image, detection.name, \
+                        cv2.putText(image, person.name, \
                         (l + 2, t + 2), \
-                        cv2.FONT_HERSHEY_DUPLEX, 1.5, (0, 0, 0), 1)
+                        cv2.FONT_HERSHEY_DUPLEX, 1.5, (0, 0, 0), 2)
 
                         #detections_out.detected_list.append(detection)
 
