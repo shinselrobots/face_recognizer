@@ -196,13 +196,15 @@ class FaceRecognitionNode(object):
                         matches = fr.compare_faces(self.database[0], features)
 
                         rospy.loginfo("DBG found a face, looking for matching faces")
-                        person.name = "Unknown"
+                        person.name = ""
+                        name_label = "Unknown"
 
                         if True in matches:
                             ind = matches.index(True)
                             person.name = self.database[1][ind] # modify the message!
+                            name_label = self.database[1][ind] # modify the label for display
                             rospy.loginfo("********** DBG FOUND MATCHING FACE! ********")
-                            rospy.loginfo("Name = " + person.name)
+                            rospy.loginfo("Name = " + name_label)
 
                         # Draw bounding boxes on current image
                         l = bb_left + left # map into the face rectangle
@@ -215,7 +217,7 @@ class FaceRecognitionNode(object):
                         #cv2.rectangle(image, (x, y), \
                         #(x + width, y + height), (255, 0, 0), 3)
 
-                        cv2.putText(image, person.name, \
+                        cv2.putText(image, name_label, \
                         (l + 2, t + 2), \
                         cv2.FONT_HERSHEY_DUPLEX, 1.5, (0, 0, 0), 2)
 
