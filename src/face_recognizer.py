@@ -108,6 +108,7 @@ class FaceRecognitionNode(object):
 
         """
 
+        self.show_faces_at_launch = rospy.get_param("~show_faces_at_launch")
         camera_topic = rospy.get_param("~camera_topic")
         detection_topic = rospy.get_param("~detection_topic")
         output_topic = rospy.get_param("~output_topic")
@@ -270,17 +271,14 @@ class FaceRecognitionNode(object):
         for f in filenames:
             im = cv2.imread(f, 1)
 
-            cv2.imshow('Face Recognition', im)
-
-            cv2.waitKey(50)
+            if self.show_faces_at_launch:
+                cv2.imshow('Face Recognition', im)
+                cv2.waitKey(50)
+                cv2.destroyAllWindows()
 
             im = im.astype(np.uint8)
-
             people_list.append(fr.face_encodings(im)[0])
-
             name_list.append(f.split('/')[-1].split('.')[0])
-
-            cv2.destroyAllWindows()
 
         return (people_list, name_list)
 
