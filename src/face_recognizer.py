@@ -1,4 +1,10 @@
 #!/usr/bin/env python
+import glob
+
+import rospy
+
+import message_filters
+
 """
 A ROS node to identify known users using face_recognition Python library.
 
@@ -10,15 +16,11 @@ and their face features will be compared to incoming face images. If a similar
 face is found, the name of the closest face image will be assigned to that
 bounding box.
 
-This is modified code from example by:
-    Cagatay Odabasi -- cagatay.odabasi@ipa.fraunhofer.de
+This is modified code from example by:        
+    Cagatay Odabasi, ros_people_object_detection_tensorflow 2017. GitHub repository: 
+    https://github.com/cagbal/ros_people_object_detection_tensorflow
+    cagatay.odabasi@ipa.fraunhofer.de    
 """
-
-import glob
-
-import rospy
-
-import message_filters
 
 import numpy as np
 
